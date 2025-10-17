@@ -1,4 +1,5 @@
-<div align="center"><h1>Sobre📝</h1>
+<div align="center">
+<h1>Sobre📝</h1>
 </div>
 
 <div align="left">
@@ -6,9 +7,7 @@
 </div>
 
 <div align="left">
-<h4>
-Foi utilizado Python como linguagem e interpretador, convertido do framework QT Designer (código em C++ convertido para Python).
-</h4>
+<h4>Foi utilizado Python como linguagem e interpretador, convertido do framework QT Designer (código em C++ convertido para Python).</h4>
 </div>
 
 <div align="left">
@@ -16,7 +15,7 @@ Foi utilizado Python como linguagem e interpretador, convertido do framework QT 
 </div>
 
 <div align="left">
-  <h3>INSTALAR:</h3>
+<h3>INSTALAR:</h3>
 </div>  
 
 <div align="left">
