@@ -11,11 +11,18 @@ Foi utilizado Python como linguagem e interpretador, convertido do framework QT 
 <div align="left">
 <h3>📥 Pré-Requisitos</h3>
 <div aling="left">
-<h5>INSTALAR: Python QT Designer</h5>
+<h5>INSTALAR:</h5>
+<div align="left">
+  <h2>INSTALAR:</h2>
+  
+  [![Python](https://img.shields.io/badge/Download-Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+  [![QT Designer](https://img.shields.io/badge/Download-QT_Designer-41CD52?logo=qt&logoColor=white)](https://build-system.fman.io/qt-designer-download)
 </div>
+</div><br>
 <div align="center">
-<h2>🔧 Extensões do VS Code</h2><p>
+<h1>🔧 Extensões do VS Code</h1><p>
 </div>
+
 <h4>Na aba de extensões do Visual Studio Code, instale:
 Python - Suporte oficial para Python</h4>
 <li>QT Tools - Ferramentas para desenvolvimento QT</li>
