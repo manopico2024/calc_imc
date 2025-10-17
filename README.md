@@ -1,8 +1,16 @@
-<div align="center"><h1>Sobre📝</h1></div>
-
+<div align="center"><h1>Sobre📝</h1>
+</div>
+<div align="left">
+<h2>📋 Descrição:</h2>
+</div>
+<div align="left">
+<h4>
+Foi utilizado Python como linguagem e interpretador, convertido do framework QT Designer (código em C++ convertido para Python).
+</h4>
+</div>
 
 <div align="left">
-MIT License
+<h1>MIT License</h1>
 
 Copyright (c) \[2025] \[Marcus Vinicius Nunes]
 
