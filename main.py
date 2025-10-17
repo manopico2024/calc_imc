@@ -32,13 +32,11 @@ class MainApp(QtWidgets.QMainWindow):
         self.connect_signals()
 
     def init_ui_components(self):
-        """Inicializa e mapeia os componentes da UI"""
-        # Mapear os componentes da UI gerada pelo Qt Designer
-        self.entry_peso = self.ui.entry_peso  # Ajuste conforme seu arquivo UI
-        self.entry_altura = self.ui.entry_altura  # Ajuste conforme seu arquivo UI
-        self.entry_relatorio = self.ui.entry_relatorio  # Ajuste conforme seu arquivo UI
-        self.label_resultado = self.ui.label_resultado  # Ajuste conforme seu arquivo UI
-        self.lv_relatorio = self.ui.lv_relatorio  # Ajuste conforme seu arquivo UI
+        self.entry_peso = self.ui.entry_peso 
+        self.entry_altura = self.ui.entry_altura
+        self.entry_relatorio = self.ui.entry_relatorio
+        self.label_resultado = self.ui.label_resultado
+        self.lv_relatorio = self.ui.lv_relatorio
         
         # Botões (ajuste os nomes conforme seu arquivo UI)
         self.btn_calcular = self.ui.btn_calcular
@@ -47,8 +45,7 @@ class MainApp(QtWidgets.QMainWindow):
         self.btn_limpar = self.ui.btn_limpar
 
     def init_database(self):
-        """Inicializa o banco de dados SQLite"""
-        self.db_path = "imc_data.db"  # Define o caminho do banco
+        self.db_path = "imc_data.db"
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
         
@@ -57,9 +54,7 @@ class MainApp(QtWidgets.QMainWindow):
             CREATE TABLE IF NOT EXISTS relatorios (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 texto TEXT NOT NULL,
-                data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
+                data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
         self.conn.commit()
 
         # Inicializar modelo para a lista de relatórios
@@ -69,21 +64,18 @@ class MainApp(QtWidgets.QMainWindow):
         self.carregar_relatorios()
 
     def connect_signals(self):
-        """Conecta os sinais dos botões aos métodos correspondentes"""
         self.btn_calcular.clicked.connect(self.executar_calculo)
         self.btn_gerar_relatorio.clicked.connect(self.gerar_relatorio)
         self.btn_excluir_relatorio.clicked.connect(self.excluir_relatorio)
         self.btn_limpar.clicked.connect(self.limpar_campos)
 
     def calcular_imc(self, peso, altura):
-        """Calcula o IMC baseado no peso e altura"""
         try:
             return peso / (altura ** 2)
         except ZeroDivisionError:
             return 0
 
     def interpretar_imc(self, imc): 
-        """Interpreta o valor do IMC e retorna classificação"""
         if imc < 18.5:
             texto = "Resultado: Abaixo do peso"
             cor = "blue"
@@ -102,38 +94,30 @@ class MainApp(QtWidgets.QMainWindow):
         else:
             texto = "Resultado: Obesidade grau III"
             cor = "purple"
-
-        # Aplica CSS direto no QLabel
         self.label_resultado.setStyleSheet(f"color: {cor}; font-weight: bold;")
         return texto
 
     def executar_calculo(self):
-        """Executa o cálculo do IMC quando o botão é pressionado"""
         peso_texto = self.entry_peso.text().strip()
         altura_texto = self.entry_altura.text().strip()
-        
         # Verificar se os campos estão vazios
         if not peso_texto or not altura_texto:
             QtWidgets.QMessageBox.warning(
                 self, 
                 "Campos Vazios", 
-                "Por favor, preencha ambos os campos (peso e altura) para calcular o IMC."
-            )
+                "Por favor, preencha ambos os campos (peso e altura) para calcular o IMC.")
             return
             
         try:
             peso = float(peso_texto.replace(',', '.'))
             altura = float(altura_texto.replace(',', '.'))
-            
             # Verificar se os valores são válidos
             if peso <= 0 or altura <= 0:
                 QtWidgets.QMessageBox.warning(
                     self, 
                     "Valores Inválidos", 
-                    "Por favor, insira valores positivos para peso e altura."
-                )
+                    "Por favor, insira valores positivos para peso e altura.")
                 return
-                
             imc = self.calcular_imc(peso, altura)
             classificacao = self.interpretar_imc(imc)
             
@@ -145,13 +129,11 @@ class MainApp(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.warning(
                 self, 
                 "Valores Inválidos", 
-                "Por favor, insira valores numéricos válidos para peso e altura."
-            )
+                "Por favor, insira valores numéricos válidos para peso e altura.")
             self.label_resultado.setText("Erro: insira valores numéricos válidos.")
             self.label_resultado.setStyleSheet("color: red; font-weight: bold;")
 
     def excluir_relatorio(self):
-        """Exclui o relatório selecionado da lista"""
         # Pega o índice selecionado no QListView
         indice = self.lv_relatorio.currentIndex()
         if not indice.isValid():
@@ -161,45 +143,35 @@ class MainApp(QtWidgets.QMainWindow):
                 "Por favor, selecione um relatório na lista para excluir."
             )
             return  # nada selecionado
-
         # Confirmar exclusão
         resposta = QtWidgets.QMessageBox.question(
             self,
             "Confirmar Exclusão",
             "Tem certeza que deseja excluir este relatório?",
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-            QtWidgets.QMessageBox.No
-        )
-        
+            QtWidgets.QMessageBox.No)
         if resposta == QtWidgets.QMessageBox.No:
             return
-
         # Pega o texto selecionado
         texto = self.lista_relatorios[indice.row()]
-
         # Exclui do banco
         self.cursor.execute("DELETE FROM relatorios WHERE texto = ?", (texto,))
         self.conn.commit()
-    
         # Atualiza a lista
         self.carregar_relatorios()
-        
         QtWidgets.QMessageBox.information(
             self, 
             "Exclusão Concluída", 
-            "Relatório excluído com sucesso."
-        )
+            "Relatório excluído com sucesso.")
 
     def gerar_relatorio(self):
-        """Gera e salva um relatório baseado no cálculo atual"""
         # Verificar se o IMC foi calculado
         resultado_imc = self.label_resultado.text().strip()
         if resultado_imc == "Resultado:" or resultado_imc.startswith("Erro:"):
             QtWidgets.QMessageBox.warning(
                 self, 
                 "IMC Não Calculado", 
-                "Por favor, calcule o IMC antes de gerar um relatório."
-            )
+                "Por favor, calcule o IMC antes de gerar um relatório.")
             return
             
         texto_adicional = self.entry_relatorio.toPlainText().strip()
@@ -209,12 +181,9 @@ class MainApp(QtWidgets.QMainWindow):
                 "Observações Vazias",
                 "Não há observações adicionais. Deseja gerar o relatório mesmo assim?",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                QtWidgets.QMessageBox.No
-            )
-            
+                QtWidgets.QMessageBox.No)
             if resposta == QtWidgets.QMessageBox.No:
                 return
-                
             texto_adicional = "Sem observações adicionais."
             
         # Criar relatório com timestamp
@@ -236,14 +205,12 @@ class MainApp(QtWidgets.QMainWindow):
         )
 
     def carregar_relatorios(self):
-        """Carrega os relatórios do banco de dados para a lista"""
         self.cursor.execute("SELECT texto FROM relatorios ORDER BY data_criacao DESC")
         resultados = self.cursor.fetchall()
         self.lista_relatorios = [r[0] for r in resultados]
         self.modelo_relatorio.setStringList(self.lista_relatorios)
 
     def limpar_campos(self):
-        """Limpa todos os campos de entrada e resultado"""
         self.entry_altura.clear()
         self.entry_peso.clear()
         self.entry_relatorio.clear()
@@ -251,7 +218,6 @@ class MainApp(QtWidgets.QMainWindow):
         self.label_resultado.setStyleSheet("")  # Remove estilos anteriores
 
     def closeEvent(self, event):
-        """Fecha a conexão com o banco de dados ao fechar a aplicação"""
         self.conn.close()
         event.accept()
 
